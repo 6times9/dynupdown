@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Dynupdown by 6times9</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Dynupdown</h1>
+        <p>A dynamic and accurate JavaScript countup and countdown timer. Multiple different timers can appear on the same page, and it can be set to handle annual events.</p>
+
+        <p class="view"><a href="https://github.com/6times9/dynupdown">View the Project on GitHub <small>6times9/dynupdown</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/6times9/dynupdown/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/6times9/dynupdown/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/6times9/dynupdown">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="dynupdown" class="anchor" href="#dynupdown" aria-hidden="true"><span class="octicon octicon-link"></span></a>dynupdown</h1>
+
+<h2>
+<a id="about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h2>
+
+<p>A dynamic and accurate JavaScript countup and countdown timer.</p>
+
+<h3>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
+
+<ul>
+<li>Multiple different timers can appear on the same page.</li>
+<li>Can be set to count down to a date, count up from it, or count down and then change to count up after it passes.</li>
+<li>Year, month, day, hour, minute, and second can be specified and are displayed in the counter.</li>
+<li>Can handle annual events; it will automatically update its working year.</li>
+<li>Text can be specified to appear before and after the counter.</li>
+<li>It can be set not to display times that are zero (i.e. "0 years, 1 month, etc." will become just "1 month, etc.").</li>
+<li>It can include years and months (for a more intuitive time, which as of version Echo is now actually accurate), it can start with weeks (e.g. "34 weeks, 6 days, etc."), or it can just start with days (e.g. "730 days, 0 hours, 0 minutes, 0 seconds" instead of "2 years, 0 months, 0 days, etc.").</li>
+<li>The CLASS of the &lt;span&gt; changes when the time is reached, allowing for a distinct style for an elapsed timer.</li>
+<li>Supports arbitrary singular and plural names for the time periods (but this does involve slightly more in-depth code editing than just setting up a counter, unfortunately), which allows for languages that don't make plurals by simply adding an "s".</li>
+</ul>
+
+<p>Previously Dynupdown itself would generate the &lt;span&gt; into which it places the timer, but as of version Hotel you can manually place a &lt;span&gt; with the appropriate ID before the call to start the timer and Dynupdown will detect it and not output its own &lt;span&gt;. This allows you to put a message (such as a static time calculated with PHP) in the &lt;span&gt; for situations where the user doesn't have JavaScript.</p>
+
+<h3>
+<a id="years-and-months" class="anchor" href="#years-and-months" aria-hidden="true"><span class="octicon octicon-link"></span></a>Years and Months</h3>
+
+<p>Versions Alpha, Bravo, Charlie, and Delta subtracted the current time and target time and then calculated the number of years, months, days etc. purely mathematically; i.e. I approximated "a year" to 365.25 days (this covers leap years) and approximated "a month" to a twelfth of the "year" value. I then divided the difference by each length from year to minute to find the number of each. Because the larger periods were calculated first, and years and months were approximations, this inaccuracy carried down to the smaller, definite periods (e.g. a day never varies, but a month can be 28, 29, 30, or 31 days). This meant that any time that displayed "1 month" or longer was progressively less accurate as the time increased.</p>
+
+<p>However, as of version Echo (2007-10-08) this is no longer the case!</p>
+
+<p>After many headaches, much giving up and having to restart because it had been too long, and some cursing at how simple it turned out to be compared to all the effort I put in, I have managed to get Dynupdown to calculate years and months as a human would; it no longer looks at the entire period (between now and the target) but instead just looks at the years to find the number of them, then moves on to the months. This means that, allowing for inaccuracy in the user's computer's clock, Dynupdown is now theoretically perfectly accurate when displaying years and months! (The options for weeks and just days were never a problem because those periods are all clearly defined).</p>
+
+<p>I should point out that there are many cases in which to test this new system, and I haven't been able to test them all, so if you notice any errors, I'd appreciate being told so I can try to fix them.</p>
+
+<h2>
+<a id="using" class="anchor" href="#using" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using</h2>
+
+<p>First put</p>
+
+<pre><code>&lt;script src="dynupdown.js" type="text/javascript"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>in the &lt;head&gt; section, and then place</p>
+
+<pre><code>&lt;script type="text/javascript"&gt;start_counter(hour, minute, second, month, day, year, direction, beforetext, aftertext, eventname, compact, countername, notyears)&lt;/script&gt;
+</code></pre>
+
+<p>wherever you want a timer to appear, editing it as appropriate. The configuration values are:</p>
+
+<ul>
+<li>hour - The hour of the target event in 24-hour format (3am=3, 3pm=15, etc.). Entered as just a number with no quotation marks.</li>
+<li>minute - The minute of the target event (0 to 59). Entered as just a number with no quotation marks.</li>
+<li>second - The second of the target event (0 to 59). Entered as just a number with no quotation marks.</li>
+<li>month - The month of the target event (January=1, February=2, etc.). Entered as just a number with no quotation marks.</li>
+<li>day - The day of the month of the target event (1 to 28, 29, 30, or 31 depending on the month). Entered as just a number with no * quotation marks.</li>
+<li>year - The year of the target event with all four digits (i.e. 1999 not 99). If you wish to have an annual event, enter "all" (with quotation marks) instead of a number.</li>
+<li>direction - The direction of the counter: "down" for countdown, "up" for countup, or "switch" to countdown then up (all with quotation marks).</li>
+<li>beforetext - The text to appear before the counter, enclosed in quotation marks and without a final space (i.e. "There is" not "There is ").</li>
+<li>aftertext - The text to appear after the counter, enclosed in quotation marks and without a leading space (i.e. "until the event" not " until the event").</li>
+<li>eventname - The name of the event, to be displayed after the time has elapsed, enclosed in quotation marks. It will be followed by " has passed", so set something like "The event" not "The event has passed".</li>
+<li>compact - Whether or not to hide periods that are zero. Can be "yes", "no", or "strict" (all with quotation marks). With "yes", "0 years, 1 month, 0 days, 1 minute, etc." will become "1 month, 0 days, 1 minute, etc."; with "strict" "0 years, 1 month, 0 days, 1 minute, etc." will become "1 month, 1 minute, etc.".</li>
+<li>countername - The id for the span automatically generated by the script for the output. This must be different for each counter on a page.</li>
+<li>notyears - Added in version Bravo, updated in version Delta. Set as 0 for "Years, Months, Days, Hours, Minutes, Seconds" (Example "Countup with Years &amp; Months" above), set as 1 for "Days, Hours, Minutes, Seconds" (Example "Countup with Days" above), set as 2 for "Weeks, Days, Hours, Minutes, Seconds" (Example "Countup with Weeks" above).</li>
+</ul>
+
+<p>For example, a countdown to New Year's Day is generated using</p>
+
+<pre><code>&lt;script type="text/javascript"&gt;start_counter(0, 0, 0, 1, 1, "all", "down", "", "to the next New Year's Day.", "New Year's Day", "yes", "newyear", 0)&lt;/script&gt;
+</code></pre>
+
+<p>and the a countup from the year 2000 is generated using</p>
+
+<pre><code>&lt;script type="text/javascript"&gt;start_counter(0, 0, 0, 1, 1, 2000, "up", "", "since the turn of the century.", "2000", "yes", "century", 0)&lt;/script&gt;
+</code></pre>
+
+<h2>
+<a id="styling" class="anchor" href="#styling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Styling</h2>
+
+<p>The CLASS of the SPAN is "dynupdown" by default. The CLASS changes to "dynupdown elapsed" when the timer runs out. CSS can be applied to these classes in the normal way.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/6times9">6times9</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
